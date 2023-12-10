@@ -1,19 +1,26 @@
 <?php
+
 namespace App\Models;
-class Listing {
-    public static function all() {
-        return [
-        ['id' => 1, 'title' => 'Listings One','descrition'=>"lorem ipsum dolor sit amet consectetur adipisicing elit "],
-        ['id' => 2, 'title' => 'Listings Two','descrition'=>"lorem ipsum dolor sit amet consectetur adipisicing elit "],
-        ['id' => 3, 'title' => 'Listings Three','descrition'=>"lorem ipsum dolor sit amet consectetur adipisicing elit "],
-        ['id' => 4, 'title' => 'Listings Four','descrition'=>"lorem ipsum dolor sit amet consectetur adipisicing elit "],
-    ];}
-    public static function find($id) {
-        $listing = self::all();
-        foreach ($listing as  $listing) {
-            if ($listing['id'] == $id) {
-                return $listing;
-            }
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Listing extends Model
+{
+    use HasFactory;
+   // protected $fillable = ['title', 'company', 'location', 'website', 'email', 'description', 'tags'];
+    public function scopeFilter($query, array $filters)
+    {
+        if($filters['tag'] ?? false){
+            $query->where('tags','like','%'.request('tag').'%');
         }
+        if($filters['search'] ?? false){
+            $query->where('title','like','%'.request('search').'%')
+            ->orWhere('description','like','%'.request('search').'%')
+            ->orWhere('company','like','%'.request('search').'%')
+            ->orWhere('location','like','%'.request('search').'%')
+            ->orWhere('tags','like','%'.request('search').'%');
+        }
+        return $query;
     }
 }
