@@ -26,11 +26,13 @@
             class="fa-solid fa-envelope"></i>
           Contact Employer</a>
 
-        <a href="{{$listing->website}}" target="_blank"
+        <a href="/proposal/{{$listing->id}}" 
           class="block bg-black text-white py-2 rounded-xl hover:opacity-80"><i class="fa-solid fa-globe"></i>
-          Visit Website</a>
+          Apply now</a>
       </div>
     </div>
+    @auth
+    @if(auth()->user()->id == $listing->user_id)
     <div class="flex w-full justify-center gap-4">
       <a href="/listing/{{$listing->id}}/edit"
         class="block bg-yellow-400 text-white mt-6 py-2 px-4 rounded-xl hover:opacity-80"><i
@@ -47,5 +49,7 @@
         </button>
       </form>
     </div>
+    @endif
+    @endauth
   </div>
 </x-layout>

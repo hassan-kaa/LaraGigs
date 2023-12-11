@@ -18,12 +18,15 @@ class UserController extends Controller
     }
     public function create(Request $request)
     {
+        $existingAdminsCount = User::where('role', 'admin')->count();
         $formFields = $request->validate([
             'name' => 'required',
             'email' => ['required','email',Rule::unique('users','email')],
             'password' => ['required','confirmed'],
+            'role' => ($existingAdminsCount > 0) ? 'user' : 'admin',
         ]);
         $formFields['password'] = bcrypt($formFields['password']);
+        
        $user = User::create($formFields);
        auth()->login($user);
         return redirect('/')->with('message','User created and logged in Successfully');

@@ -23,4 +23,11 @@ class Listing extends Model
         }
         return $query;
     }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+    public function proposal()
+    {
+        return $this->hasMany(Proposal::class);
+    }
 }
